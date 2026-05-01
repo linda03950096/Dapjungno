@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>운명 대행소 — 결정 못하면 우리한테 맡겨</title>
+  <meta name="description" content="고민을 털어놓으면 우주가 대신 결정해드립니다.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ── Screen 1: Input ── -->
+  <section id="screen-input" class="screen active">
+    <div class="container">
+      <header class="hero">
+        <span class="badge">결정 대행 서비스</span>
+        <h1>운명아,<br>대신 결정해줘</h1>
+        <p class="lead">고민을 털어놓으면 우주가 알아서 해결해드립니다.<br>책임은 지지 않습니다.</p>
+      </header>
+
+      <div class="input-wrap">
+        <textarea
+          id="worry-input"
+          class="worry-textarea"
+          placeholder="오늘 치킨 먹어도 될까&#10;그 사람한테 연락해도 될까&#10;회사 그냥 때려칠까..."
+          maxlength="200"
+          rows="4"
+          spellcheck="false"
+        ></textarea>
+        <div class="textarea-meta">
+          <span class="char-count" id="char-count">0 / 200</span>
+        </div>
+        <button id="btn-go" class="btn btn-primary" disabled>
+          운명에 맡기기 <span class="btn-arrow">→</span>
+        </button>
+      </div>
+
+      <p class="disclaimer">* 결과에 따른 인생 책임은 본인에게 있습니다</p>
+    </div>
+  </section>
+
+  <!-- ── Screen 2: Method Selection ── -->
+  <section id="screen-method" class="screen">
+    <div class="container">
+      <div class="nav-bar">
+        <button class="btn-text" id="btn-back-to-input">← 다시 입력</button>
+      </div>
+      <div class="worry-chip" id="worry-chip"></div>
+      <h2>어떻게 결정할까?</h2>
+      <p class="screen-sub">어차피 결과는 비슷합니다.</p>
+
+      <div class="method-grid">
+        <button class="method-card" data-method="petal">
+          <div class="method-icon">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+              <ellipse cx="14" cy="8" rx="4" ry="6.5" fill="#e8d5d8" opacity="0.9"/>
+              <ellipse cx="14" cy="8" rx="4" ry="6.5" fill="#e8d5d8" opacity="0.9" transform="rotate(60 14 14)"/>
+              <ellipse cx="14" cy="8" rx="4" ry="6.5" fill="#e8d5d8" opacity="0.9" transform="rotate(120 14 14)"/>
+              <ellipse cx="14" cy="8" rx="4" ry="6.5" fill="#e8d5d8" opacity="0.9" transform="rotate(180 14 14)"/>
+              <ellipse cx="14" cy="8" rx="4" ry="6.5" fill="#e8d5d8" opacity="0.9" transform="rotate(240 14 14)"/>
+              <ellipse cx="14" cy="8" rx="4" ry="6.5" fill="#e8d5d8" opacity="0.9" transform="rotate(300 14 14)"/>
+              <circle cx="14" cy="14" r="4" fill="#f0d060"/>
+            </svg>
+          </div>
+          <div class="method-info">
+            <h3>꽃잎 뽑기</h3>
+            <p>할까 말까, 한 잎씩</p>
+          </div>
+        </button>
+
+        <button class="method-card" data-method="roulette">
+          <div class="method-icon">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+              <circle cx="14" cy="14" r="12" stroke="#d0d0d0" stroke-width="1.5"/>
+              <path d="M14 14 L14 2" stroke="#b0b0b0" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M14 14 L23.4 19.4" stroke="#b0b0b0" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M14 14 L4.6 19.4" stroke="#b0b0b0" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="14" cy="14" r="2.5" fill="#333"/>
+              <polygon points="14,1 15.2,5 12.8,5" fill="#333"/>
+            </svg>
+          </div>
+          <div class="method-info">
+            <h3>운명의 룰렛</h3>
+            <p>돌면서 생각해봐</p>
+          </div>
+        </button>
+
+        <button class="method-card" data-method="dice">
+          <div class="method-icon">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+              <rect x="3" y="3" width="22" height="22" rx="5" stroke="#c0c0c0" stroke-width="1.5" fill="white"/>
+              <circle cx="9" cy="9" r="2" fill="#333"/>
+              <circle cx="19" cy="9" r="2" fill="#333"/>
+              <circle cx="9" cy="19" r="2" fill="#333"/>
+              <circle cx="19" cy="19" r="2" fill="#333"/>
+              <circle cx="14" cy="14" r="2" fill="#333"/>
+            </svg>
+          </div>
+          <div class="method-info">
+            <h3>신성한 주사위</h3>
+            <p>신도 던진다고 했다</p>
+          </div>
+        </button>
+
+        <button class="method-card" data-method="card">
+          <div class="method-icon">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+              <rect x="5" y="3" width="13" height="18" rx="2.5" stroke="#c0c0c0" stroke-width="1.5" fill="white"/>
+              <rect x="10" y="7" width="13" height="18" rx="2.5" fill="#f0f0f0" stroke="#d0d0d0" stroke-width="1.5"/>
+              <line x1="13" y1="12" x2="20" y2="12" stroke="#c0c0c0" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="13" y1="16" x2="20" y2="16" stroke="#c0c0c0" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="13" y1="20" x2="17" y2="20" stroke="#c0c0c0" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="method-info">
+            <h3>신탁 카드</h3>
+            <p>카드가 이미 알고 있다</p>
+          </div>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Screen 3: Interaction (dynamic) ── -->
+  <section id="screen-interact" class="screen">
+    <div class="container" id="interact-container"></div>
+  </section>
+
+  <!-- ── Screen 4: Result ── -->
+  <section id="screen-result" class="screen">
+    <div class="container">
+      <div id="result-card" class="result-card">
+        <div class="result-card-header">
+          <span class="result-label">운명의 답변</span>
+          <span class="result-method-tag" id="result-method-tag"></span>
+        </div>
+        <div class="result-card-body">
+          <p class="result-worry-text" id="result-worry-display"></p>
+          <div class="result-divider"></div>
+          <div class="result-verdict" id="result-verdict-text"></div>
+          <p class="result-flavor" id="result-flavor-text"></p>
+        </div>
+        <div class="result-card-footer">
+          <span>운명 대행소</span>
+          <span id="result-date"></span>
+        </div>
+      </div>
+
+      <div class="result-actions">
+        <button class="btn btn-secondary" id="btn-retry">같은 고민 다시</button>
+        <button class="btn btn-secondary" id="btn-share">공유하기</button>
+        <button class="btn btn-primary" id="btn-new">새 고민 넣기</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Share Toast -->
+<div id="toast" class="toast" hidden>링크가 클립보드에 복사됐어요</div>
+
+<script src="app.js"></script>
+</body>
+</html>
