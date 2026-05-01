@@ -28,121 +28,87 @@
     </div>
   </header>
 
-  <!-- ══ SCREEN: LANDING (Feed) ══ -->
-  <section id="screen-landing" class="screen feed-screen active">
-    <div class="feed-body">
-
-      <div class="section-label">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" class="pin-icon">
-          <path d="M8.5 1.5a1 1 0 0 0-1.41 0L5.5 3.09 3.41 1A1 1 0 0 0 2 2.41L4.09 4.5 1 7.59V9h1.41l3.09-3.09 2.09 2.09A1 1 0 0 0 9 8.41V7l2-2-2.5-3.5z"/>
-        </svg>
-        Featured
+  <!-- ══ SCREEN: LANDING (Hero) ══ -->
+  <section id="screen-landing" class="screen hero-screen active">
+    <div class="hero-stage">
+      <div class="hero-glow g1"></div>
+      <div class="hero-glow g2"></div>
+      <div class="hero-copy">
+        <p class="hero-eyebrow">DAPJUNGNO · 답정너</p>
+        <h1 class="hero-headline">이미<br>결정됐어.</h1>
+        <p class="hero-desc">아직 모르고 있을 뿐</p>
       </div>
-
-      <!-- 결정 받기 Card -->
-      <button class="feed-card card-decision" id="btn-to-decision">
-        <div class="card-texture"></div>
-        <div class="card-overlay"></div>
-        <div class="card-inner">
-          <div class="card-top-row">
-            <span class="card-chip">결정 대행 서비스</span>
-          </div>
-          <div class="card-bottom-row">
-            <div>
-              <p class="card-eyebrow">Need a decision?</p>
-              <h2 class="card-title">결정 받기</h2>
-            </div>
-            <span class="card-arrow-circle">→</span>
-          </div>
+      <div class="hero-orb-wrap">
+        <div class="hero-orb">
+          <div class="orb-core"></div>
+          <div class="orb-shine"></div>
+          <div class="orb-ring r1"></div>
+          <div class="orb-ring r2"></div>
+          <div class="orb-dot d1"></div>
+          <div class="orb-dot d2"></div>
+          <div class="orb-dot d3"></div>
         </div>
-      </button>
-
-      <div class="section-label" style="margin-top: 8px;">
-        Luck Test
       </div>
-
-      <!-- Toilet Paper Card -->
-      <button class="feed-card card-toilet fortune-card-item" data-test="toilet">
-        <div class="card-texture"></div>
-        <div class="card-overlay"></div>
-        <div class="card-inner">
-          <div class="card-bottom-row">
-            <div>
-              <p class="card-eyebrow">Toilet Paper Luck</p>
-              <h3 class="card-title-md">화장실 휴지 운</h3>
-            </div>
-            <div class="card-meta-corner">
-              <span class="meta-big">01</span>
-              <span class="meta-label">TEST</span>
-            </div>
-          </div>
-        </div>
-      </button>
-
-      <!-- Egg Card -->
-      <button class="feed-card card-egg fortune-card-item" data-test="egg">
-        <div class="card-texture"></div>
-        <div class="card-overlay"></div>
-        <div class="card-inner">
-          <div class="card-bottom-row">
-            <div>
-              <p class="card-eyebrow">Egg Destiny</p>
-              <h3 class="card-title-md">계란 운 테스트</h3>
-            </div>
-            <div class="card-meta-corner">
-              <span class="meta-big">02</span>
-              <span class="meta-label">TEST</span>
-            </div>
-          </div>
-        </div>
-      </button>
-
-      <!-- Clover Card -->
-      <button class="feed-card card-clover fortune-card-item" data-test="clover">
-        <div class="card-texture"></div>
-        <div class="card-overlay"></div>
-        <div class="card-inner">
-          <div class="card-bottom-row">
-            <div>
-              <p class="card-eyebrow">Clover Fortune</p>
-              <h3 class="card-title-md">클로버 운 테스트</h3>
-            </div>
-            <div class="card-meta-corner">
-              <span class="meta-big">03</span>
-              <span class="meta-label">TEST</span>
-            </div>
-          </div>
-        </div>
-      </button>
-
-      <p class="feed-disclaimer">결과에 따른 인생 책임은 본인에게 있습니다</p>
     </div>
+    <div class="choice-panel">
+      <p class="choice-hint">뭘 원해요</p>
+      <div class="choice-row">
+        <button class="choice-card cc-decision" id="btn-to-decision">
+          <span class="cc-num">01</span>
+          <strong class="cc-title">결정<br>받기</strong>
+          <span class="cc-sub">고민을 맡겨요</span>
+        </button>
+        <button class="choice-card cc-fortune" id="btn-to-fortune-select">
+          <span class="cc-num">02</span>
+          <strong class="cc-title">오늘의<br>운세</strong>
+          <span class="cc-sub">운을 확인해요</span>
+        </button>
+        <button class="choice-card cc-oracle" id="btn-to-quick-oracle">
+          <span class="cc-num">03</span>
+          <strong class="cc-title">신탁<br>카드</strong>
+          <span class="cc-sub">카드가 답해요</span>
+        </button>
+      </div>
+    </div>
+  </section>
 
-    <!-- Bottom Nav (inside landing, fixed) -->
-    <nav class="bottom-nav" id="bottom-nav">
-      <button class="nav-item active" id="nav-feed">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
-          <rect x="1" y="1" width="7" height="7" rx="2"/>
-          <rect x="10" y="1" width="7" height="7" rx="2"/>
-          <rect x="1" y="10" width="7" height="7" rx="2"/>
-          <rect x="10" y="10" width="7" height="7" rx="2"/>
-        </svg>
-        <span>Feed</span>
-      </button>
-      <button class="nav-item" id="nav-decide">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-          <circle cx="9" cy="9" r="7"/>
-          <path d="M9 6v4M9 13v.5"/>
-        </svg>
-        <span>결정</span>
-      </button>
-      <button class="nav-item" id="nav-fortune">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
-          <path d="M9 1l2 5.5h5.5l-4.5 3.3 1.7 5.5L9 12.3l-4.7 3 1.7-5.5L1.5 6.5H7z"/>
-        </svg>
-        <span>운세</span>
-      </button>
-    </nav>
+  <!-- ══ SCREEN: FORTUNE SELECT ══ -->
+  <section id="screen-fortune-select" class="screen hero-screen">
+    <div class="hero-stage hero-stage-sm">
+      <div class="hero-glow g1"></div>
+      <div class="luck-sparks">
+        <span class="spark s1"></span>
+        <span class="spark s2"></span>
+        <span class="spark s3"></span>
+        <span class="spark s4"></span>
+        <span class="spark s5"></span>
+      </div>
+      <div class="hero-copy">
+        <p class="hero-eyebrow">TODAY'S LUCK</p>
+        <h1 class="hero-headline hero-headline-md">오늘의<br>운 테스트</h1>
+        <p class="hero-desc">사소한 순간이 오늘 하루를 결정해</p>
+      </div>
+    </div>
+    <div class="choice-panel choice-panel-sub">
+      <p class="choice-hint">무엇으로 확인할까요</p>
+      <div class="choice-row">
+        <button class="choice-card cc-toilet fortune-choice" data-test="toilet">
+          <span class="cc-num">01</span>
+          <strong class="cc-title">화장실<br>휴지 운</strong>
+          <span class="cc-sub">Toilet Paper</span>
+        </button>
+        <button class="choice-card cc-egg fortune-choice" data-test="egg">
+          <span class="cc-num">02</span>
+          <strong class="cc-title">계란<br>운 테스트</strong>
+          <span class="cc-sub">Egg Destiny</span>
+        </button>
+        <button class="choice-card cc-clover fortune-choice" data-test="clover">
+          <span class="cc-num">03</span>
+          <strong class="cc-title">클로버<br>운 테스트</strong>
+          <span class="cc-sub">Clover Fortune</span>
+        </button>
+      </div>
+    </div>
   </section>
 
   <!-- ══ SCREEN: TOILET PAPER ══ -->
@@ -343,6 +309,30 @@
   </section>
 
 </div>
+<nav class="bottom-nav" id="bottom-nav">
+  <button class="nav-item active" id="nav-feed">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+      <rect x="1" y="1" width="7" height="7" rx="2"/>
+      <rect x="10" y="1" width="7" height="7" rx="2"/>
+      <rect x="1" y="10" width="7" height="7" rx="2"/>
+      <rect x="10" y="10" width="7" height="7" rx="2"/>
+    </svg>
+    <span>Feed</span>
+  </button>
+  <button class="nav-item" id="nav-decide">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <circle cx="9" cy="9" r="7"/>
+      <path d="M9 6v4M9 13v.5"/>
+    </svg>
+    <span>결정</span>
+  </button>
+  <button class="nav-item" id="nav-fortune">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
+      <path d="M9 1l2 5.5h5.5l-4.5 3.3 1.7 5.5L9 12.3l-4.7 3 1.7-5.5L1.5 6.5H7z"/>
+    </svg>
+    <span>운세</span>
+  </button>
+</nav>
 <div id="toast" class="toast" hidden></div>
 <script src="app.js"></script>
 </body>

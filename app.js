@@ -48,19 +48,21 @@ const CLOVER_OUTCOMES = [
 
 // ── Screen Navigation ──
 const NAV_CONFIG = {
-  'screen-landing':  { title: '답정너.',       back: null },
-  'screen-input':    { title: '결정 받기',      back: 'screen-landing' },
-  'screen-method':   { title: '방법 선택',      back: 'screen-input' },
-  'screen-interact': { title: '',              back: 'screen-method' },
-  'screen-result':   { title: '운명의 답변',    back: 'screen-landing' },
-  'screen-toilet':   { title: '화장실 휴지 운', back: 'screen-landing' },
-  'screen-egg':      { title: '계란 운 테스트', back: 'screen-landing' },
-  'screen-clover':   { title: '클로버 운 테스트', back: 'screen-landing' },
-  'screen-foresult': { title: '오늘의 운',      back: 'screen-landing' },
+  'screen-landing':        { title: '답정너.',           back: null,                   dark: true  },
+  'screen-fortune-select': { title: '오늘의 운 테스트',   back: 'screen-landing',       dark: true  },
+  'screen-input':          { title: '결정 받기',          back: 'screen-landing'                    },
+  'screen-method':         { title: '방법 선택',          back: 'screen-input'                      },
+  'screen-interact':       { title: '',                  back: 'screen-method'                     },
+  'screen-result':         { title: '운명의 답변',        back: 'screen-landing'                    },
+  'screen-toilet':         { title: '화장실 휴지 운',     back: 'screen-fortune-select'             },
+  'screen-egg':            { title: '계란 운 테스트',     back: 'screen-fortune-select'             },
+  'screen-clover':         { title: '클로버 운 테스트',   back: 'screen-fortune-select'             },
+  'screen-foresult':       { title: '오늘의 운',          back: 'screen-fortune-select'             },
 };
 
-const appBack  = document.getElementById('app-back');
-const appTitle = document.getElementById('app-title');
+const appBack   = document.getElementById('app-back');
+const appTitle  = document.getElementById('app-title');
+const bottomNav = document.getElementById('bottom-nav');
 
 function showScreen(id, titleOverride) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -76,6 +78,8 @@ function showScreen(id, titleOverride) {
     appBack.hidden = true;
     appBack.onclick = null;
   }
+  bottomNav.hidden = id !== 'screen-landing';
+  document.body.classList.toggle('dark-ui', !!cfg.dark);
 }
 
 function showToast(msg) {
@@ -93,29 +97,23 @@ function todayStr() {
 // ── Init ──
 showScreen('screen-landing');
 
-// ── Landing: Decision button ──
+// ── Landing: Choice buttons ──
 document.getElementById('btn-to-decision').addEventListener('click', () => showScreen('screen-input'));
-
-// ── Landing: Bottom Nav ──
-document.getElementById('nav-feed').addEventListener('click', () => showScreen('screen-landing'));
-document.getElementById('nav-decide').addEventListener('click', () => showScreen('screen-input'));
-document.getElementById('nav-fortune').addEventListener('click', () => {
-  // scroll to the luck test section in the feed
-  document.getElementById('screen-landing').classList.add('active');
-  document.querySelectorAll('.screen').forEach(s => {
-    if (s.id !== 'screen-landing') s.classList.remove('active');
-  });
-  document.getElementById('screen-landing').classList.add('active');
-  appBack.hidden = true;
-  appTitle.textContent = '답정너.';
-  requestAnimationFrame(() => {
-    const el = document.querySelector('.fortune-card-item');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
+document.getElementById('btn-to-fortune-select').addEventListener('click', () => showScreen('screen-fortune-select'));
+document.getElementById('btn-to-quick-oracle').addEventListener('click', () => {
+  state.worry = '지금 이 순간';
+  state.method = 'card';
+  showScreen('screen-interact', '신탁 카드');
+  setupInteraction('card');
 });
 
-// ── Landing: Fortune test cards ──
-document.querySelectorAll('.fortune-card-item').forEach(card => {
+// ── Bottom Nav ──
+document.getElementById('nav-feed').addEventListener('click', () => showScreen('screen-landing'));
+document.getElementById('nav-decide').addEventListener('click', () => showScreen('screen-input'));
+document.getElementById('nav-fortune').addEventListener('click', () => showScreen('screen-fortune-select'));
+
+// ── Fortune Select: test cards ──
+document.querySelectorAll('.fortune-choice').forEach(card => {
   card.addEventListener('click', () => {
     state.fortuneTest = card.dataset.test;
     resetFortune(card.dataset.test);
@@ -128,7 +126,7 @@ document.getElementById('btn-fore-retry').addEventListener('click', () => {
   resetFortune(state.fortuneTest);
   showScreen(`screen-${state.fortuneTest}`);
 });
-document.getElementById('btn-fore-other').addEventListener('click', () => showScreen('screen-landing'));
+document.getElementById('btn-fore-other').addEventListener('click', () => showScreen('screen-fortune-select'));
 document.getElementById('btn-fore-home').addEventListener('click', () => showScreen('screen-landing'));
 
 function showFortuneResult(testName, subtitle, verdict, flavor) {
@@ -192,7 +190,7 @@ function startToilet() {
 
     setTimeout(() => {
       showFortuneResult('화장실 휴지 운', outcome.label, outcome.verdict, outcome.flavor);
-    }, count * 100 + 800);
+    }, count * 100 + 3000);
   }, 1400);
 }
 
@@ -233,7 +231,7 @@ function startEgg() {
 
     setTimeout(() => {
       showFortuneResult('계란 운 테스트', outcome.label, outcome.verdict, outcome.flavor);
-    }, 900);
+    }, 3200);
   }, 560);
 }
 
@@ -321,7 +319,7 @@ function startClover() {
 
   setTimeout(() => {
     showFortuneResult('클로버 운 테스트', outcome.label, outcome.verdict, outcome.flavor);
-  }, 1600);
+  }, 3800);
 }
 
 function buildCloverSVG(leaves) {
