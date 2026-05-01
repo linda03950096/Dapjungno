@@ -1,10 +1,14 @@
 'use strict';
 
 // ── State ──
+const HISTORY_KEY = 'dapjungno-result-history';
+const MAX_HISTORY = 30;
+
 const state = {
   worry: '',
   method: '',
   fortuneTest: '',
+  history: loadHistory(),
 };
 
 // ── Decision Outcomes ──
@@ -50,19 +54,27 @@ const CLOVER_OUTCOMES = [
 const NAV_CONFIG = {
   'screen-landing':        { title: '답정너.',           back: null,                   dark: true  },
   'screen-fortune-select': { title: '오늘의 운 테스트',   back: 'screen-landing',       dark: true  },
-  'screen-input':          { title: '결정 받기',          back: 'screen-landing'                    },
-  'screen-method':         { title: '방법 선택',          back: 'screen-input'                      },
-  'screen-interact':       { title: '',                  back: 'screen-method'                     },
-  'screen-result':         { title: '운명의 답변',        back: 'screen-landing'                    },
-  'screen-toilet':         { title: '화장실 휴지 운',     back: 'screen-fortune-select'             },
-  'screen-egg':            { title: '계란 운 테스트',     back: 'screen-fortune-select'             },
-  'screen-clover':         { title: '클로버 운 테스트',   back: 'screen-fortune-select'             },
-  'screen-foresult':       { title: '오늘의 운',          back: 'screen-fortune-select'             },
+  'screen-input':          { title: '결정 받기',          back: 'screen-landing',       dark: true  },
+  'screen-method':         { title: '방법 선택',          back: 'screen-input',         dark: true  },
+  'screen-interact':       { title: '',                  back: 'screen-method',        dark: true  },
+  'screen-result':         { title: '운명의 답변',        back: 'screen-landing',       dark: true  },
+  'screen-history':        { title: '결과 모아보기',      back: 'screen-landing',       dark: true  },
+  'screen-toilet':         { title: '화장실 휴지 운',     back: 'screen-fortune-select', dark: true },
+  'screen-egg':            { title: '계란 운 테스트',     back: 'screen-fortune-select', dark: true },
+  'screen-clover':         { title: '클로버 운 테스트',   back: 'screen-fortune-select', dark: true },
+  'screen-foresult':       { title: '오늘의 운',          back: 'screen-fortune-select', dark: true },
 };
 
 const appBack   = document.getElementById('app-back');
 const appTitle  = document.getElementById('app-title');
 const bottomNav = document.getElementById('bottom-nav');
+const bottomNavItems = {
+  'screen-landing': document.getElementById('nav-feed'),
+  'screen-input': document.getElementById('nav-decide'),
+  'screen-fortune-select': document.getElementById('nav-fortune'),
+  'screen-history': document.getElementById('nav-history'),
+};
+const TOP_LEVEL_SCREENS = new Set(Object.keys(bottomNavItems));
 
 function showScreen(id, titleOverride) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -78,7 +90,9 @@ function showScreen(id, titleOverride) {
     appBack.hidden = true;
     appBack.onclick = null;
   }
-  bottomNav.hidden = id !== 'screen-landing';
+  bottomNav.hidden = !TOP_LEVEL_SCREENS.has(id);
+  Object.values(bottomNavItems).forEach(item => item.classList.remove('active'));
+  if (bottomNavItems[id]) bottomNavItems[id].classList.add('active');
   document.body.classList.toggle('dark-ui', !!cfg.dark);
 }
 
@@ -92,6 +106,79 @@ function showToast(msg) {
 function todayStr() {
   const d = new Date();
   return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function timeStr() {
+  return new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+}
+
+function loadHistory() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+    return Array.isArray(parsed) ? parsed.slice(0, MAX_HISTORY) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveHistory() {
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(state.history));
+}
+
+function addHistoryItem(item) {
+  state.history = [{
+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    date: todayStr(),
+    time: timeStr(),
+    ...item,
+  }, ...state.history].slice(0, MAX_HISTORY);
+  saveHistory();
+
+  if (document.getElementById('screen-history').classList.contains('active')) {
+    renderHistory();
+  }
+}
+
+function renderHistory() {
+  const list = document.getElementById('history-list');
+  const empty = document.getElementById('history-empty');
+  const count = document.getElementById('history-count');
+
+  list.innerHTML = '';
+  count.textContent = state.history.length
+    ? `최근 ${state.history.length}개의 결과를 모아봤어요.`
+    : '확인한 결과가 여기에 쌓입니다.';
+  empty.hidden = state.history.length > 0;
+
+  state.history.forEach(item => {
+    const card = document.createElement('article');
+    card.className = `history-card history-card-${item.kind}`;
+
+    const meta = document.createElement('div');
+    meta.className = 'history-meta';
+
+    const type = document.createElement('span');
+    type.textContent = item.kind === 'fortune' ? item.testName : item.methodName;
+
+    const date = document.createElement('span');
+    date.textContent = `${item.date} ${item.time}`;
+
+    const verdict = document.createElement('strong');
+    verdict.className = 'history-verdict';
+    verdict.textContent = item.verdict;
+
+    const subject = document.createElement('p');
+    subject.className = 'history-subject';
+    subject.textContent = item.subject;
+
+    const flavor = document.createElement('p');
+    flavor.className = 'history-flavor';
+    flavor.textContent = item.flavor;
+
+    meta.append(type, date);
+    card.append(meta, verdict, subject, flavor);
+    list.appendChild(card);
+  });
 }
 
 // ── Init ──
@@ -111,6 +198,10 @@ document.getElementById('btn-to-quick-oracle').addEventListener('click', () => {
 document.getElementById('nav-feed').addEventListener('click', () => showScreen('screen-landing'));
 document.getElementById('nav-decide').addEventListener('click', () => showScreen('screen-input'));
 document.getElementById('nav-fortune').addEventListener('click', () => showScreen('screen-fortune-select'));
+document.getElementById('nav-history').addEventListener('click', () => {
+  renderHistory();
+  showScreen('screen-history');
+});
 
 // ── Fortune Select: test cards ──
 document.querySelectorAll('.fortune-choice').forEach(card => {
@@ -135,6 +226,13 @@ function showFortuneResult(testName, subtitle, verdict, flavor) {
   document.getElementById('fore-verdict').textContent = verdict;
   document.getElementById('fore-flavor').textContent = flavor;
   document.getElementById('fore-date').textContent = todayStr();
+  addHistoryItem({
+    kind: 'fortune',
+    testName,
+    subject: subtitle,
+    verdict,
+    flavor,
+  });
   showScreen('screen-foresult');
 }
 
@@ -424,6 +522,13 @@ function showResult(outcomeIndex) {
   document.getElementById('result-flavor-text').textContent   = o.flavor;
   document.getElementById('result-method-tag').textContent    = `via ${METHOD_LABELS[state.method]}`;
   document.getElementById('result-date').textContent          = todayStr();
+  addHistoryItem({
+    kind: 'decision',
+    methodName: METHOD_LABELS[state.method],
+    subject: state.worry,
+    verdict: o.verdict,
+    flavor: o.flavor,
+  });
   showScreen('screen-result');
 }
 
@@ -436,7 +541,7 @@ function setupInteraction(method) {
 
 // ── Petal ──
 function setupPetal(container) {
-  const PETAL_COUNT = 10;
+  const PETAL_COUNT = 8 + Math.floor(Math.random() * 9);
   let clickCount = Math.random() > 0.5 ? 0 : 1;
 
   container.innerHTML = `
