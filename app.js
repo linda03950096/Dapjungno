@@ -139,6 +139,24 @@ function addHistoryItem(item) {
   }
 }
 
+function deleteHistoryItem(id) {
+  const item = state.history.find(entry => entry.id === id);
+  if (!item) return;
+
+  const ok = window.confirm(`"${item.verdict}" 결과를 기록에서 지울까요?`);
+  if (!ok) return;
+
+  state.history = state.history.filter(entry => entry.id !== id);
+  saveHistory();
+  renderHistory();
+  showToast('기록에서 삭제했어요');
+}
+
+function formatHistoryDate(date) {
+  if (date === todayStr()) return `오늘 · ${date}`;
+  return date;
+}
+
 function renderHistory() {
   const list = document.getElementById('history-list');
   const empty = document.getElementById('history-empty');
@@ -150,34 +168,69 @@ function renderHistory() {
     : '확인한 결과가 여기에 쌓입니다.';
   empty.hidden = state.history.length > 0;
 
-  state.history.forEach(item => {
-    const card = document.createElement('article');
-    card.className = `history-card history-card-${item.kind}`;
+  const groups = state.history.reduce((acc, item) => {
+    const key = item.date || '날짜 없음';
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(item);
+    return acc;
+  }, {});
 
-    const meta = document.createElement('div');
-    meta.className = 'history-meta';
+  Object.entries(groups).forEach(([date, items]) => {
+    const group = document.createElement('section');
+    group.className = 'history-group';
 
-    const type = document.createElement('span');
-    type.textContent = item.kind === 'fortune' ? item.testName : item.methodName;
+    const heading = document.createElement('div');
+    heading.className = 'history-date-row';
 
-    const date = document.createElement('span');
-    date.textContent = `${item.date} ${item.time}`;
+    const title = document.createElement('h3');
+    title.className = 'history-date';
+    title.textContent = formatHistoryDate(date);
 
-    const verdict = document.createElement('strong');
-    verdict.className = 'history-verdict';
-    verdict.textContent = item.verdict;
+    const amount = document.createElement('span');
+    amount.className = 'history-date-count';
+    amount.textContent = `${items.length}개`;
 
-    const subject = document.createElement('p');
-    subject.className = 'history-subject';
-    subject.textContent = item.subject;
+    heading.append(title, amount);
+    group.appendChild(heading);
 
-    const flavor = document.createElement('p');
-    flavor.className = 'history-flavor';
-    flavor.textContent = item.flavor;
+    items.forEach(item => {
+      const card = document.createElement('article');
+      card.className = `history-card history-card-${item.kind}`;
 
-    meta.append(type, date);
-    card.append(meta, verdict, subject, flavor);
-    list.appendChild(card);
+      const meta = document.createElement('div');
+      meta.className = 'history-meta';
+
+      const type = document.createElement('span');
+      type.textContent = item.kind === 'fortune' ? item.testName : item.methodName;
+
+      const date = document.createElement('span');
+      date.textContent = item.time;
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'history-delete';
+      removeBtn.type = 'button';
+      removeBtn.setAttribute('aria-label', `${item.verdict} 결과 삭제`);
+      removeBtn.textContent = '×';
+      removeBtn.addEventListener('click', () => deleteHistoryItem(item.id));
+
+      const verdict = document.createElement('strong');
+      verdict.className = 'history-verdict';
+      verdict.textContent = item.verdict;
+
+      const subject = document.createElement('p');
+      subject.className = 'history-subject';
+      subject.textContent = item.subject;
+
+      const flavor = document.createElement('p');
+      flavor.className = 'history-flavor';
+      flavor.textContent = item.flavor;
+
+      meta.append(type, date);
+      card.append(meta, removeBtn, verdict, subject, flavor);
+      group.appendChild(card);
+    });
+
+    list.appendChild(group);
   });
 }
 

@@ -37,8 +37,8 @@ body { min-height: 100vh; overflow-x: hidden; }
   padding: 0 22px;
 }
 .app-title {
-  font-size: 1.6rem; font-weight: 800; letter-spacing: -0.04em; color: var(--ink);
-  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.34rem; font-weight: 820; letter-spacing: 0; color: var(--ink);
+  font-family: var(--font);
 }
 .app-back {
   background: none; border: none; cursor: pointer;
@@ -679,12 +679,34 @@ body.dark-ui .flower-center {
 .history-list {
   display: flex; flex-direction: column; gap: 10px;
 }
+.history-group {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.history-date-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 8px 2px 2px;
+}
+.history-date {
+  font-size: 0.82rem;
+  font-weight: 760;
+  color: rgba(255,255,255,0.74);
+  letter-spacing: -0.01em;
+}
+.history-date-count {
+  padding: 4px 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 999px;
+  color: rgba(255,255,255,0.44);
+  font-size: 0.68rem;
+  font-weight: 700;
+}
 .history-card {
   background: rgba(255,255,255,0.06);
   border: 1px solid rgba(255,255,255,0.11);
   border-radius: var(--r);
   padding: 18px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.22);
+  position: relative;
 }
 .history-card-fortune {
   border-top-color: rgba(56,189,248,0.55);
@@ -697,6 +719,29 @@ body.dark-ui .flower-center {
   color: rgba(255,255,255,0.42);
   font-size: 0.68rem; font-weight: 650;
   letter-spacing: 0.04em;
+  padding-right: 34px;
+}
+.history-delete {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.48);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.18s var(--ease), color 0.18s var(--ease), transform 0.18s var(--ease);
+}
+.history-delete:hover {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+}
+.history-delete:active {
+  transform: scale(0.92);
 }
 .history-verdict {
   display: block;
